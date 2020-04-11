@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ux-hac-image
+  namespace: kns
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+      - image: docker.io/mrkunkel/ux-hac-image
+        env:
+        - name: HAC_URL
+          value: "http://proc-dataweave.example.com/?payload_url=http://sys-hac-states.example.com/"

@@ -1,0 +1,24 @@
+%dw 2.0
+output application/json
+---
+payload filter ((item) -> (
+        (item.attributes.friendly_name endsWith "Battery") or
+        (item.attributes.friendly_name endsWith "Marina") or
+        (item.attributes.friendly_name endsWith "Phone") or
+        (item.attributes.friendly_name endsWith "Light") or
+        (item.attributes.friendly_name endsWith "Temp") or
+        (item.attributes.friendly_name endsWith "TV")
+    ))
+map (item) -> {
+    name: item.attributes.friendly_name,
+    (state: item.state),
+    (group: "temp") if (item.attributes.friendly_name endsWith "Temp"),
+    (group: "device") if (item.attributes.friendly_name endsWith "TV"),
+    (group: "light") if (item.attributes.friendly_name endsWith "Light"),
+    (group: "phone") if (item.attributes.friendly_name endsWith "Phone"),
+    (group: "weather") if (item.attributes.friendly_name endsWith "Marina"),
+    (group: "battery") if (item.attributes.friendly_name endsWith "Battery"),
+    (humidity: item.attributes.humidity) if (item.attributes.humidity?),
+    (temperature: item.attributes.temperature) if (item.attributes.temperature?),
+    (battery_level: item.attributes.battery_level) if (item.attributes.battery_level?),
+}
